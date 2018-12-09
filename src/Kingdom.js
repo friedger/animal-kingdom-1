@@ -167,11 +167,11 @@ class Kingdom extends Component {
               <p>{username} is an unknown animal that hails from an unknown land.</p>
             }
             <p>
-              {mine ? <Link className="btn btn-primary" to="/me" role="button">Edit my animal</Link>
-                : <a
-                  className='btn btn-primary'
-                  href={`${window.location.origin}/kingdom/${currentUsername}?add=${app}/kingdom/${username}`}
-                >Add ruler to my kingdom
+            {mine ? <Link className="btn btn-primary" to="/me" role="button">Edit my monster</Link>
+            : <a
+              className='btn btn-primary'
+              href={`${window.location.origin}/kingdom/${currentUsername}?add=${app}/kingdom/${username}`}
+            >Add ruler to my kingdom
             </a>}
             </p>
             <div className="container">

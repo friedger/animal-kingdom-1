@@ -3,31 +3,103 @@ import { AppConfig } from 'blockstack'
 export const appConfig = new AppConfig(['store_write', 'publish_data'])
 export const ANIMALS = [
   {
-    id: 'cat',
-    name: 'Cat',
-    superpower: 'Has 9 lives.'
+    id: 'monster-0',
+    name: 'Black Bat'
   },
   {
-    id: 'dog',
-    name: 'Dog',
-    superpower: 'Catching frisbees.'
+    id: 'monster-1',
+    name: 'Red Bat'
   },
   {
-    id: 'lion',
-    name: 'Lion',
-    superpower: 'Roaring loudly.'
-  }]
+    id: 'monster-2',
+    name: 'Yellow Bat'
+  },
+  {
+    id: 'monster-3',
+    name: 'Grey Cat'
+  },
+  {
+    id: 'monster-4',
+    name: 'White Cat'
+  },
+  {
+    id: 'monster-5',
+    name: 'Red Cat'
+  },
+  {
+    id: 'monster-6',
+    name: 'Green Octopus'
+  },
+  {
+    id: 'monster-7',
+    name: 'Brown Octopus'
+  },
+  {
+    id: 'monster-8',
+    name: 'Lila Octopus'
+  },
+  {
+    id: 'monster-9',
+    name: 'Blue Crab'
+  },
+  {
+    id: 'monster-10',
+    name: 'Green Crab'
+  },
+  {
+    id: 'monster-11',
+    name: 'Yellow Crab'
+  },
+  {
+    id: 'monster-12',
+    name: 'Yellow Worm'
+  },
+  {
+    id: 'monster-13',
+    name: 'Green Worm'
+  },
+  {
+    id: 'monster-14',
+    name: 'White Worm'
+  },
+  {
+    id: 'monster-15',
+    name: 'Green Tree Monster'
+  },
+  {
+    id: 'monster-16',
+    name: 'Pink Tree Monster'
+  },
+  {
+    id: 'monster-17',
+    name: 'Black Tree Monster'
+  },
+  {
+    id: 'monster-18',
+    name: 'Green Flower Monster'
+  },
+  {
+    id: 'monster-19',
+    name: 'Blue Flower Monster'
+  },
+  {
+    id: 'monster-20',
+    name: 'White Flower Monster'
+  }
+]
 
 export const TERRITORIES = [
   {
-    id: 'forest',
-    name: 'Forest',
-    superpower: 'Trees!'
+    id: 'mountain',
+    name: 'Mountain'
   },
   {
-    id: 'tundra',
-    name: 'Tundra',
-    superpower: 'Let it snow!'
+    id: 'lake',
+    name: 'Lake'
+  },
+  {
+    id: 'field',
+    name: 'Field'
   }
 ]
 
@@ -40,10 +112,6 @@ export const OTHER_KINGDOMS = [
   {
     app: 'https://animal-kingdom-1.firebaseapp.com',
     ruler: 'larry.id'
-  },
-  {
-    app: 'http://localhost:3001',
-    ruler: 'larz.id'
   },
   {
     app: 'https://decentralised-islands.netlify.com',

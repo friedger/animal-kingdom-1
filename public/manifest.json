@@ -1,10 +1,10 @@
 {
-  "short_name": "Animal Kingdom",
-  "name": "Animal Kingdom",
+  "short_name": "Monster Kingdom",
+  "name": "Monster Kingdom",
   "icons": [
     {
-      "src": "https://helloblockstack.com/icon-192x192.png",
-      "sizes": "192x192",
+      "src": "https://helloblockstack.com/icon-256x256.png",
+      "sizes": "256x256",
       "type": "image/png"
     }
   ],
