@@ -52,6 +52,7 @@ export function loadRuler(userSession, username, app) {
   const options = { decrypt: false, username, app }
   return userSession.getFile(ME_FILENAME, options)
   .then((content) => {
+    console.log("ruler ", content)
     if(content) {
       const ruler = JSON.parse(content)
       return ruler

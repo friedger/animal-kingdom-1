@@ -24,6 +24,9 @@ class OtherKingdoms extends Component {
     OTHER_KINGDOMS.map((kingdom, index) => {
       return loadRuler(this.userSession, kingdom.ruler, kingdom.app)
       .then(ruler => {
+        if (!ruler) {
+          return;
+        }
         kingdoms[index] = {
           ruler: {
             username: kingdom.ruler,
@@ -33,6 +36,7 @@ class OtherKingdoms extends Component {
           app: kingdom.app
         }
         this.setState({ kingdoms })
+        console.log("set kingdoms");
         return loadSubjects(this.userSession, kingdom.ruler, kingdom.app)
         .then(subjects => {
             kingdoms[index].subjects = subjects
@@ -72,10 +76,10 @@ class OtherKingdoms extends Component {
             <div
               className="list-group-item list-group-item-action flex-column align-items-start"
             >
-              <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">Loading other kingdoms...</h5>
+              <div className="d-flex w-100 justify-content-between">
+                <h5 className="mb-1">Loading other kingdoms...</h5>
               </div>
-              <p class="mb-1">&nbsp;</p>
+              <p className="mb-1">&nbsp;</p>
             </div>
             :
             <div>
