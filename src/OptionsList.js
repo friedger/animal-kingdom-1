@@ -19,7 +19,7 @@ class OptionsList extends Component {
               <div className="card">
               <h4 className="card-header">{ option.name }</h4>
               <img className="card-img-top"
-                src={`/${type}/${option.id}.png`}
+                src={`/${type}/${option.id}.jpg`}
                 alt={option.name}
               />
               <div className="card-body">
