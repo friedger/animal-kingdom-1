@@ -7,84 +7,20 @@ export const ANIMALS = [
     name: 'Black Bat'
   },
   {
-    id: 'monster-1',
-    name: 'Red Bat'
-  },
-  {
-    id: 'monster-2',
-    name: 'Yellow Bat'
-  },
-  {
     id: 'monster-3',
     name: 'Grey Cat'
-  },
-  {
-    id: 'monster-4',
-    name: 'White Cat'
-  },
-  {
-    id: 'monster-5',
-    name: 'Red Cat'
   },
   {
     id: 'monster-6',
     name: 'Green Octopus'
   },
   {
-    id: 'monster-7',
-    name: 'Brown Octopus'
-  },
-  {
-    id: 'monster-8',
-    name: 'Lila Octopus'
-  },
-  {
     id: 'monster-9',
     name: 'Blue Crab'
   },
   {
-    id: 'monster-10',
-    name: 'Green Crab'
-  },
-  {
-    id: 'monster-11',
-    name: 'Yellow Crab'
-  },
-  {
     id: 'monster-12',
     name: 'Yellow Worm'
-  },
-  {
-    id: 'monster-13',
-    name: 'Green Worm'
-  },
-  {
-    id: 'monster-14',
-    name: 'White Worm'
-  },
-  {
-    id: 'monster-15',
-    name: 'Green Tree Monster'
-  },
-  {
-    id: 'monster-16',
-    name: 'Pink Tree Monster'
-  },
-  {
-    id: 'monster-17',
-    name: 'Black Tree Monster'
-  },
-  {
-    id: 'monster-18',
-    name: 'Green Flower Monster'
-  },
-  {
-    id: 'monster-19',
-    name: 'Blue Flower Monster'
-  },
-  {
-    id: 'monster-20',
-    name: 'White Flower Monster'
   }
 ]
 
