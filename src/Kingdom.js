@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { UserSession } from 'blockstack'
-import { jsonCopy, subjectFromKingdomUrl,
-  loadRuler, loadSubjects, resolveSubjects } from './utils'
+import { UserSessionChat } from './UserSessionChat'
+import {
+  jsonCopy, subjectFromKingdomUrl,
+  loadRuler, loadSubjects, resolveSubjects
+} from './utils'
 import Subject from './Subject'
 import { appConfig, SUBJECTS_FILENAME, EXPLORER_URL } from './constants'
 
@@ -23,7 +26,7 @@ class Kingdom extends Component {
       },
       subjects: [],
       value: '',
-      app:`${props.protocol}//${props.realm}`,
+      app: `${props.protocol}//${props.realm}`,
       rulerUsername: props.ruler,
       clickAdd: false
     }
@@ -32,6 +35,7 @@ class Kingdom extends Component {
     this.removeSubject = this.removeSubject.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.loadKingdom = this.loadKingdom.bind(this)
+    this.userSessionChat = new UserSessionChat(this.userSession)
   }
 
   componentWillMount() {
@@ -39,7 +43,7 @@ class Kingdom extends Component {
     const ruler = this.props.ruler
     this.loadKingdom(ruler, app)
     const search = window.location.search
-    if(search) {
+    if (search) {
       const appUrl = search.split('=')[1]
       this.setState({
         value: appUrl,
@@ -50,7 +54,7 @@ class Kingdom extends Component {
 
   componentWillReceiveProps(nextProps) {
     const nextSubjects = nextProps.subjects
-    if(nextSubjects) {
+    if (nextSubjects) {
       if (nextSubjects.length !== this.state.subjects.length) {
         this.setState({ subjects: jsonCopy(nextSubjects) })
       }
@@ -60,29 +64,50 @@ class Kingdom extends Component {
 
 
   handleChange(event) {
-   this.setState({value: event.target.value});
+    this.setState({ value: event.target.value });
   }
 
   loadKingdom(ruler, app) {
     loadRuler(this.userSession, ruler, app)
-    .then(ruler => {
-      if (ruler) {
-        this.setState({ ruler })
-      }
-    })
+      .then(ruler => {
+        if (ruler) {
+          this.setState({ ruler })
+        }
+      })
 
     loadSubjects(this.userSession, ruler, app)
-    .then(subjects => {
-      this.setState({ subjects })
-      resolveSubjects(this, this.userSession, subjects)
-    })
+      .then(subjects => {
+        this.setState({ subjects })
+        resolveSubjects(this, this.userSession, subjects)
+      })
+  }
+
+  notifySubject(subject, content) {
+    const roomId = "!CjjvuECfgTSlVkzsEB:openintents.modular.im"
+    console.log("userSessionChat", this.userSessionChat, subject.username)
+    console.log("userSessionChatSendMessage", this.userSessionChat.sendMessage)
+    this.userSessionChat.sendMessage(subject.username, roomId, content).then(
+      result => {
+        console.log("result ", result)
+      }, error => {
+        console.log("error", error)
+      }
+    )
   }
 
   addSubject(e) {
     e.preventDefault()
     const subject = subjectFromKingdomUrl(this.state.value)
+
+    const content = {
+      msgtype: "m.text",
+      body: "I just added " + subject.username + " to my kingdom!",
+      format: "org.matrix.custom.html",
+      formatted_body: "I just added <subjectlink/> to my kingdom!",
+    }
+    this.notifySubject(subject, content)
     const subjects = jsonCopy(this.state.subjects)
-    this.setState({value: '', clickAdd: false})
+    this.setState({ value: '', clickAdd: false })
     subjects.push(subject)
     this.setState({ subjects })
     this.saveSubjects(subjects)
@@ -99,12 +124,12 @@ class Kingdom extends Component {
   saveSubjects(subjects) {
     const options = { encrypt: false }
     this.userSession.putFile(SUBJECTS_FILENAME, JSON.stringify(subjects), options)
-    .finally(() => {
-      if(window.location.search) {
-        window.history.pushState(null, "", window.location.href.split("?")[0])
-      }
-      resolveSubjects(this, this.userSession, subjects)
-    })
+      .finally(() => {
+        if (window.location.search) {
+          window.history.pushState(null, "", window.location.href.split("?")[0])
+        }
+        resolveSubjects(this, this.userSession, subjects)
+      })
   }
 
   render() {
@@ -123,14 +148,14 @@ class Kingdom extends Component {
         <div className="row">
           <div
             className="col-lg-12 territory"
-            style={{backgroundImage: `url('${app}/territories/${rulerTerritory.id}.jpg')`}}
+            style={{ backgroundImage: `url('${app}/territories/${rulerTerritory.id}.jpg')` }}
           >
-          { rulerAnimal && rulerAnimal.name ?
-            <img className="rounded-circle" src={`${app}/animals/${rulerAnimal.id}.jpg`} alt={rulerAnimal.name} />
-            :
-            <img className="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-            alt="The Ruler" />
-          }
+            {rulerAnimal && rulerAnimal.name ?
+              <img className="rounded-circle" src={`${app}/animals/${rulerAnimal.id}.jpg`} alt={rulerAnimal.name} />
+              :
+              <img className="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                alt="The Ruler" />
+            }
           </div>
         </div>
         <div className="row ruler">
@@ -142,11 +167,11 @@ class Kingdom extends Component {
               <p>{username} is an unknown animal that hails from an unknown land.</p>
             }
             <p>
-            {mine ? <Link className="btn btn-primary" to="/me" role="button">Edit my animal</Link>
-            : <a
-              className='btn btn-primary'
-              href={`${window.location.origin}/kingdom/${currentUsername}?add=${app}/kingdom/${username}`}
-            >Add ruler to my kingdom
+              {mine ? <Link className="btn btn-primary" to="/me" role="button">Edit my animal</Link>
+                : <a
+                  className='btn btn-primary'
+                  href={`${window.location.origin}/kingdom/${currentUsername}?add=${app}/kingdom/${username}`}
+                >Add ruler to my kingdom
             </a>}
             </p>
             <div className="container">
@@ -156,7 +181,7 @@ class Kingdom extends Component {
                   <div
                     id="addSubject"
                     className="add-frame col-lg-8"
-                    style={{borderColor: (clickAdd ? 'red' : '#f8f9fa')}}
+                    style={{ borderColor: (clickAdd ? 'red' : '#f8f9fa') }}
                   >
                     <form onSubmit={this.addSubject} className="input-group">
                       <input
@@ -168,7 +193,7 @@ class Kingdom extends Component {
                         placeholder="https://example.com/kingdom/ruler.id"
                       />
                       <div className="input-group-append">
-                        <input type="submit" className="btn btn-primary" value="Add subject"/>
+                        <input type="submit" className="btn btn-primary" value="Add subject" />
                       </div>
                     </form>
                   </div>
@@ -177,19 +202,19 @@ class Kingdom extends Component {
                 null
               }
               <div className="card-deck">
-              {subjects.map((subject, index) => {
-                return (
-                  <Subject
-                    key={index}
-                    index={index}
-                    subject={subject}
-                    removeSubject={this.removeSubject}
-                    myKingdom={myKingdom}
-                    currentUsername={currentUsername}
-                  />
-                      )
-                    })
-              }
+                {subjects.map((subject, index) => {
+                  return (
+                    <Subject
+                      key={index}
+                      index={index}
+                      subject={subject}
+                      removeSubject={this.removeSubject}
+                      myKingdom={myKingdom}
+                      currentUsername={currentUsername}
+                    />
+                  )
+                })
+                }
               </div>
             </div>
           </div>
