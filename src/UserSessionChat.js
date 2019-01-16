@@ -57,11 +57,9 @@ export class UserSessionChat {
             return this.login().then(() => {
                 return matrixClient.joinRoom(roomId, {}).then(data => {
                     console.log("data join", data)
-                    return matrixClient.invite(roomId, receiverMatrixAccount).then(data => {
-                        console.log("data", data)
+                    return matrixClient.invite(roomId, receiverMatrixAccount).finally(() => {                        
                         if (receiverProfile.appUserAddress) {
-                            return matrixClient.invite(roomId, this.addressToAccount(receiverProfile.appUserAddress)).then(res => {
-                                console.log("data", data)                        
+                            return matrixClient.invite(roomId, this.addressToAccount(receiverProfile.appUserAddress)).finally(res => {                                               
                                 return matrixClient.sendEvent(roomId, "m.room.message", content, "").then(res => {                            
                                     console.log("msg sent", res)
                                     return Promise.resolve(res)

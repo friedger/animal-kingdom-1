@@ -56,7 +56,8 @@ class Kingdom extends Component {
       if (data.liveEvent) {
         var messageToAppend = room.timeline[room.timeline.length - 1];        
         if (messageToAppend.event.type === "m.room.message" && messageToAppend.event.room_id === "!CjjvuECfgTSlVkzsEB:openintents.modular.im") {
-          this.setState({msg:messageToAppend.event.content.body})
+          const msg = messageToAppend.sender.name + ": " + messageToAppend.event.content.body
+          this.setState({msg})
           console.log("msg received", messageToAppend)
         }
       }
@@ -98,7 +99,8 @@ class Kingdom extends Component {
     this.userSessionChat.sendMessage(subject.username, roomId, content).then(
       result => {
         console.log("result ", result)
-      }, error => {
+      })
+      .catch( error => {
         console.log("error", error)
         if (error.errcode === "M_CONSENT_NOT_GIVEN") {
           var linkUrl = error.message.substring(error.message.indexOf("https://openintents.modular.im"), error.message.length - 1)          
@@ -107,9 +109,7 @@ class Kingdom extends Component {
           this.setState({msg, err:error.message, linkUrl})
         }
       }
-    ).catch(error => {
-      console.log("error", error)
-    })
+    )
   }
 
   addSubject(e) {
@@ -133,9 +133,17 @@ class Kingdom extends Component {
   removeSubject(e, index) {
     e.preventDefault()
     const subjects = jsonCopy(this.state.subjects)
-    subjects.splice(index, 1) // remove subject at index
+    const subject = subjects.splice(index, 1)[0] // remove subject at index
+    console.log("removed subject", subject)
     this.setState({ subjects })
     this.saveSubjects(subjects)
+    const content = {
+      msgtype: "m.text",
+      body: "I just banished " + subject.username + ", sorry!",
+      format: "org.matrix.custom.html",
+      formatted_body: "I just banished <subjectlink/>, sorry!",
+    }
+    this.notifySubject(subject, content)
   }
 
   saveSubjects(subjects) {
@@ -186,7 +194,7 @@ class Kingdom extends Component {
         )}
         {err && (<div className="row">
           <div className="col-lg-12">
-            <a href={linkUrl}>{err}</a>
+            <a href={linkUrl} target="_blank" rel="noopener">{err}</a>
           </div>
         </div>)}
         <div className="row ruler">
@@ -210,7 +218,7 @@ class Kingdom extends Component {
               {mine ?
                 <div className="row justify-content-center">
                   <div
-                    id="addSubject"
+                    id="addSubject" 
                     className="add-frame col-lg-8"
                     style={{ borderColor: (clickAdd ? 'red' : '#f8f9fa') }}
                   >
