@@ -90,7 +90,7 @@ export class UserSessionChat {
             const userData = this.userSession.loadUserData()
             return this.getOTP(userData).then(result => {
                 var deviceDisplayName = userData.username + " via Monster Kingdom"
-                console.log("deviceDisplayName", deviceDisplayName)
+                console.log("login", deviceDisplayName, result.username, result.password)
                 return this.matrixClient.login("m.login.password",
                     {
                         identifier: {
