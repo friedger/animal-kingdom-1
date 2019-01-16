@@ -36,6 +36,8 @@ export class UserSessionChat {
                 matrixClient.on("Room.timeline", onMsgReceived)
                 matrixClient.startClient()
                 console.log("event listeners are setup")
+            }, err => {
+                console.log("login failed", err)
             })
         } else {
             console.log("user id ", matrixClient.getUserId())
@@ -87,7 +89,9 @@ export class UserSessionChat {
         } else {
             const userData = this.userSession.loadUserData()
             return this.getOTP(userData).then(result => {
-                this.matrixClient.login("m.login.password",
+                var deviceDisplayName = userData.username + " via Monster Kingdom"
+                console.log("deviceDisplayName", deviceDisplayName)
+                return this.matrixClient.login("m.login.password",
                     {
                         identifier: {
                             "type": "m.id.user",
@@ -95,15 +99,7 @@ export class UserSessionChat {
                         },
                         user: result.username,
                         password: result.password,
-                        initial_device_display_name: userData.username + " via " + window.location.origin 
-                    }, function (err, data) {
-                        console.log("err", err)
-                        console.log("data", data)
-                        if (!err) {
-                            return Promise.resolve(data)
-                        } else {
-                            return Promise.reject(err)
-                        }
+                        initial_device_display_name: deviceDisplayName  
                     })
             })
         }
