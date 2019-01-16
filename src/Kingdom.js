@@ -28,13 +28,15 @@ class Kingdom extends Component {
       value: '',
       app: `${props.protocol}//${props.realm}`,
       rulerUsername: props.ruler,
-      clickAdd: false
+      clickAdd: false,
+      msg:"Messages will appear here from your chat provider openintents.modular.im (OI Chat)"
     }
     this.userSession = new UserSession({ appConfig })
     this.addSubject = this.addSubject.bind(this)
     this.removeSubject = this.removeSubject.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.loadKingdom = this.loadKingdom.bind(this)
+    this.notifySubject = this.notifySubject.bind(this)
     this.userSessionChat = new UserSessionChat(this.userSession)
   }
 
@@ -50,6 +52,15 @@ class Kingdom extends Component {
         clickAdd: true
       })
     }
+    this.userSessionChat.setOnMessageListener((event, room, toStartOfTimeline, removed, data) => {
+      if (data.liveEvent) {
+        var messageToAppend = room.timeline[room.timeline.length - 1];        
+        if (messageToAppend.event.type === "m.room.message" && messageToAppend.event.room_id === "!CjjvuECfgTSlVkzsEB:openintents.modular.im") {
+          this.setState({msg:messageToAppend.event.content.body})
+          console.log("msg received", messageToAppend)
+        }
+      }
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -84,15 +95,21 @@ class Kingdom extends Component {
 
   notifySubject(subject, content) {
     const roomId = "!CjjvuECfgTSlVkzsEB:openintents.modular.im"
-    console.log("userSessionChat", this.userSessionChat, subject.username)
-    console.log("userSessionChatSendMessage", this.userSessionChat.sendMessage)
     this.userSessionChat.sendMessage(subject.username, roomId, content).then(
       result => {
         console.log("result ", result)
       }, error => {
         console.log("error", error)
+        if (error.errcode === "M_CONSENT_NOT_GIVEN") {
+          var linkUrl = error.message.substring(error.message.indexOf("https://openintents.modular.im"), error.message.length - 1)          
+          console.log(linkUrl)
+          var msg = subject.username + " was not notified. Please review the T&C of your chat provider openintents.modular.im (OI Chat)"
+          this.setState({msg, err:error.message, linkUrl})
+        }
       }
-    )
+    ).catch(error => {
+      console.log("error", error)
+    })
   }
 
   addSubject(e) {
@@ -143,6 +160,9 @@ class Kingdom extends Component {
     const app = this.state.app
     const clickAdd = this.state.clickAdd
     const currentUsername = this.props.currentUsername
+    const msg = this.state.msg
+    const err = this.state.err
+    const linkUrl = this.state.linkUrl
     return (
       <div className="Kingdom">
         <div className="row">
@@ -158,6 +178,17 @@ class Kingdom extends Component {
             }
           </div>
         </div>
+        {msg && (<div className="row">
+          <div className="col-lg-12">
+          {msg}
+          </div>
+        </div>
+        )}
+        {err && (<div className="row">
+          <div className="col-lg-12">
+            <a href={linkUrl}>{err}</a>
+          </div>
+        </div>)}
         <div className="row ruler">
           <div className="col-lg-12">
             <h2>Ruler {username}</h2>
@@ -167,11 +198,11 @@ class Kingdom extends Component {
               <p>{username} is an unknown animal that hails from an unknown land.</p>
             }
             <p>
-            {mine ? <Link className="btn btn-primary" to="/me" role="button">Edit my monster</Link>
-            : <a
-              className='btn btn-primary'
-              href={`${window.location.origin}/kingdom/${currentUsername}?add=${app}/kingdom/${username}`}
-            >Add ruler to my kingdom
+              {mine ? <Link className="btn btn-primary" to="/me" role="button">Edit my monster</Link>
+                : <a
+                  className='btn btn-primary'
+                  href={`${window.location.origin}/kingdom/${currentUsername}?add=${app}/kingdom/${username}`}
+                >Add ruler to my kingdom
             </a>}
             </p>
             <div className="container">
