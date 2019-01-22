@@ -123,9 +123,9 @@ class Kingdom extends Component {
 
     const content = {
       msgtype: "m.text",
-      body: "I just added " + subject.username + " to my kingdom!",
+      body: "I just added you to my kingdom. Come and join me there!",
       format: "org.matrix.custom.html",
-      formatted_body: "I just added <subjectlink/> to my kingdom!",
+      formatted_body: "I just added you to my kingdom! Come and join me <a href=\"https://planet.friedger.de\"> there</a>!"
     }
     this.notifySubject(subject, content)
     const subjects = jsonCopy(this.state.subjects)
