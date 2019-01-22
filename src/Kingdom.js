@@ -55,7 +55,7 @@ class Kingdom extends Component {
     this.userSessionChat.setOnMessageListener((event, room, toStartOfTimeline, removed, data) => {
       if (data.liveEvent) {
         var messageToAppend = room.timeline[room.timeline.length - 1];        
-        if (messageToAppend.event.type === "m.room.message" && messageToAppend.event.room_id === "!CjjvuECfgTSlVkzsEB:openintents.modular.im") {
+        if (messageToAppend.event.type === "m.room.message") {
           const msg = messageToAppend.sender.name + ": " + messageToAppend.event.content.body
           this.setState({msg})
           console.log("msg received", messageToAppend)
@@ -95,21 +95,26 @@ class Kingdom extends Component {
   }
 
   notifySubject(subject, content) {
-    const roomId = "!CjjvuECfgTSlVkzsEB:openintents.modular.im"
-    this.userSessionChat.sendMessage(subject.username, roomId, content).then(
-      result => {
-        console.log("result ", result)
-      })
-      .catch( error => {
-        console.log("error", error)
-        if (error.errcode === "M_CONSENT_NOT_GIVEN") {
-          var linkUrl = error.message.substring(error.message.indexOf("https://openintents.modular.im"), error.message.length - 1)          
-          console.log(linkUrl)
-          var msg = subject.username + " was not notified. Please review the T&C of your chat provider openintents.modular.im (OI Chat)"
-          this.setState({msg, err:error.message, linkUrl})
+    this.userSessionChat.createNewRoom("Monster Kingdom " + this.props.ruler + " & "+ subject.username, "Welcome from " + this.props.ruler).then(
+      roomResult => {
+      this.userSessionChat.sendMessage(subject.username, roomResult.room_id, content).then(
+        result => {
+          console.log("result ", result)
+        })
+        .catch( error => {
+          console.log("error", error)
+          if (error.errcode === "M_CONSENT_NOT_GIVEN") {
+            var linkUrl = error.message.substring(error.message.indexOf("https://openintents.modular.im"), error.message.length - 1)          
+            console.log(linkUrl)
+            var msg = subject.username + " was not notified. Please review the T&C of your chat provider openintents.modular.im (OI Chat)"
+            this.setState({msg, err:error.message, linkUrl})
+          }
         }
-      }
-    )
+      )
+    })
+    .catch(error => {
+      console.log("error from create room" , error)
+    })
   }
 
   addSubject(e) {

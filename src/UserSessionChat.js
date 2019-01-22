@@ -47,6 +47,13 @@ export class UserSessionChat {
         }
     }
 
+    createNewRoom(name, topic) {
+        const matrix = this.matrixClient
+        return this.login().then(() => {
+            return matrix.createRoom({visibility: "private", name, topic})
+        })
+    }
+
     sendMessage(receiverName, roomId, content) {
         return this.lookupProfile(receiverName).then(receiverProfile => {
             console.log("receiver", receiverProfile)
