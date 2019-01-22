@@ -1,0 +1,15 @@
+{
+  "short_name": "Monster Kingdom",
+  "name": "Monster Kingdom",
+  "icons": [
+    {
+      "src": "https://planet.friedger.de/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
