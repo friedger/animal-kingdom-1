@@ -344,41 +344,45 @@ class Kingdom extends Component {
                     </form>
                   </div>
 
-                  <div
-                    id="addContacat"
-                    className="add-frame col-lg-8"
-                    style={{ borderColor: clickContactAdd ? "red" : "#f8f9fa" }}
-                  >
-                    <form onSubmit={this.addContact} className="input-group">
-                      <select
-                        className="form-control"
-                        type="text"
-                        onChange={this.handleContactChange}
-                        value={this.state.contact}
-                        required
-                        placeholder="name.id"
-                      >
-                        <option value=""></option>
-                        {contacts.map((contact, index) => {
-                          return (
-                            <option
-                              value={contact.attrs.blockstackID}
-                              key={contact.identifier}
-                            >
-                              {contact.attrs.firstName}
-                            </option>
-                          );
-                        })}
-                      </select>
-                      <div className="input-group-append">
-                        <input
-                          type="submit"
-                          className="btn btn-primary"
-                          value="Add Contact"
-                        />
-                      </div>
-                    </form>
-                  </div>
+                  {contacts && contacts.length > 0 && (
+                    <div
+                      id="addContact"
+                      className="add-frame col-lg-8"
+                      style={{
+                        borderColor: clickContactAdd ? "red" : "#f8f9fa"
+                      }}
+                    >
+                      <form onSubmit={this.addContact} className="input-group">
+                        <select
+                          className="form-control"
+                          type="text"
+                          onChange={this.handleContactChange}
+                          value={this.state.contact}
+                          required
+                          placeholder="name.id"
+                        >
+                          <option value=""></option>
+                          {contacts.map((contact, index) => {
+                            return (
+                              <option
+                                value={contact.attrs.blockstackID}
+                                key={contact.identifier}
+                              >
+                                {contact.attrs.firstName}
+                              </option>
+                            );
+                          })}
+                        </select>
+                        <div className="input-group-append">
+                          <input
+                            type="submit"
+                            className="btn btn-primary"
+                            value="Add Contact"
+                          />
+                        </div>
+                      </form>
+                    </div>
+                  )}
                 </div>
               ) : null}
               <div className="card-deck">
