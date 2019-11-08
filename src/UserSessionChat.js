@@ -1,9 +1,9 @@
-import { UserSession, config, publicKeyToAddress, getPublicKeyFromPrivate, resolveZoneFileToProfile } from 'blockstack'
+import { config, publicKeyToAddress, getPublicKeyFromPrivate, resolveZoneFileToProfile } from 'blockstack'
 import * as matrixcs from 'matrix-js-sdk'
 
 
 export class UserSessionChat {
-    userSession: UserSession
+    userSession
 
     constructor(session) {
         this.userSession = session
@@ -64,16 +64,16 @@ export class UserSessionChat {
             return this.login().then(() => {
                 return matrixClient.joinRoom(roomId, {}).then(data => {
                     console.log("data join", data)
-                    return matrixClient.invite(roomId, receiverMatrixAccount).finally(() => {                        
+                    return matrixClient.invite(roomId, receiverMatrixAccount).finally(() => {
                         if (receiverProfile.appUserAddress) {
-                            return matrixClient.invite(roomId, this.addressToAccount(receiverProfile.appUserAddress)).finally(res => {                                               
-                                return matrixClient.sendEvent(roomId, "m.room.message", content, "").then(res => {                            
+                            return matrixClient.invite(roomId, this.addressToAccount(receiverProfile.appUserAddress)).finally(res => {
+                                return matrixClient.sendEvent(roomId, "m.room.message", content, "").then(res => {
                                     console.log("msg sent", res)
                                     return Promise.resolve(res)
                                 })
                             })
                         } else {
-                            return matrixClient.sendEvent(roomId, "m.room.message", content, "").then(res => {                            
+                            return matrixClient.sendEvent(roomId, "m.room.message", content, "").then(res => {
                                 console.log("msg sent", res);
                                 return Promise.resolve(res)
                             })
@@ -104,7 +104,7 @@ export class UserSessionChat {
                         },
                         user: result.username,
                         password: result.password,
-                        initial_device_display_name: deviceDisplayName  
+                        initial_device_display_name: deviceDisplayName
                     })
             })
         }
