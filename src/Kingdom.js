@@ -129,7 +129,7 @@ class Kingdom extends Component {
             console.log(e);
           }
         } else {
-          console.log(`User not on ${KINGDOM_DOMAIN}`, c);
+          console.log(`User not on ${KINGDOM_DOMAIN}`, contact);
         }
       });
     } catch (e) {
