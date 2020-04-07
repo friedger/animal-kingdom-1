@@ -4,6 +4,10 @@ import { Contact } from 'blockstack-collections';
 export const appConfig = new AppConfig(['store_write', 'publish_data', Contact.scope]);
 export const authOptions = {
   redirectTo: '/',
+  appDetails: {
+    name: 'Monster Kingdom',
+    icon: 'https://planet.friedger.de/icon-256x256.png',
+  },
 };
 
 export const ANIMALS = [

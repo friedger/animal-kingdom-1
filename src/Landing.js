@@ -7,7 +7,12 @@ import './Landing.css';
 const Landing = () => {
   const signIn = e => {
     e.preventDefault();
-    showBlockstackConnect(authOptions);
+    showBlockstackConnect({
+      ...authOptions,
+      finished: session => {
+        window.location.href = '/';
+      },
+    });
   };
 
   return (

@@ -119,7 +119,7 @@ class Kingdom extends Component {
         } else {
           console.log(`User not on ${KINGDOM_DOMAIN}`, contact);
         }
-      });
+      }, this.userSession);
     } catch (e) {
       console.log('no permissions to use Contact collection', e);
     }
