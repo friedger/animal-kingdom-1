@@ -1,21 +1,15 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { UserSession, getUserAppFileUrl } from "blockstack";
-import { UserSessionChat } from "./UserSessionChat";
-import {
-  jsonCopy,
-  subjectFromKingdomUrl,
-  loadRuler,
-  loadSubjects,
-  resolveSubjects
-} from "./utils";
-import Subject from "./Subject";
-import { appConfig, SUBJECTS_FILENAME, EXPLORER_URL } from "./constants";
-import { Contact } from "blockstack-collections";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { UserSession, getUserAppFileUrl } from 'blockstack';
+import { UserSessionChat } from './UserSessionChat';
+import { jsonCopy, subjectFromKingdomUrl, loadRuler, loadSubjects, resolveSubjects } from './utils';
+import Subject from './Subject';
+import { appConfig, SUBJECTS_FILENAME, EXPLORER_URL } from './constants';
+import { Contact } from 'blockstack-collections';
 
-import "./Kingdom.css";
+import './Kingdom.css';
 
-const KINGDOM_DOMAIN = "https://planet.friedger.de";
+const KINGDOM_DOMAIN = 'https://planet.friedger.de';
 
 class Kingdom extends Component {
   constructor(props) {
@@ -23,16 +17,15 @@ class Kingdom extends Component {
     this.state = {
       ruler: {
         animal: {},
-        territory: {}
+        territory: {},
       },
       subjects: [],
-      value: "",
+      value: '',
       app: `${props.protocol}//${props.realm}`,
       rulerUsername: props.ruler,
       clickAdd: false,
       clickContactAdd: false,
-      msg:
-        "Messages will appear here from your chat provider openintents.modular.im (OI Chat)"
+      msg: 'Messages will appear here from your chat provider openintents.modular.im (OI Chat)',
     };
     this.userSession = new UserSession({ appConfig });
     this.addSubject = this.addSubject.bind(this);
@@ -51,27 +44,22 @@ class Kingdom extends Component {
     this.loadKingdom(ruler, app);
     const search = window.location.search;
     if (search) {
-      const appUrl = search.split("=")[1];
+      const appUrl = search.split('=')[1];
       this.setState({
         value: appUrl,
-        clickAdd: true
+        clickAdd: true,
       });
     }
-    this.userSessionChat.setOnMessageListener(
-      (event, room, toStartOfTimeline, removed, data) => {
-        if (data.liveEvent) {
-          var messageToAppend = room.timeline[room.timeline.length - 1];
-          if (messageToAppend.event.type === "m.room.message") {
-            const msg =
-              messageToAppend.sender.name +
-              ": " +
-              messageToAppend.event.content.body;
-            this.setState({ msg });
-            console.log("msg received", messageToAppend);
-          }
+    this.userSessionChat.setOnMessageListener((event, room, toStartOfTimeline, removed, data) => {
+      if (data.liveEvent) {
+        var messageToAppend = room.timeline[room.timeline.length - 1];
+        if (messageToAppend.event.type === 'm.room.message') {
+          const msg = messageToAppend.sender.name + ': ' + messageToAppend.event.content.body;
+          this.setState({ msg });
+          console.log('msg received', messageToAppend);
         }
       }
-    );
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -105,15 +93,15 @@ class Kingdom extends Component {
     });
 
     const contacts = [];
-    console.log("loading contacts");
+    console.log('loading contacts');
     try {
       Contact.list(async c => {
-        console.log("trying", c);
+        console.log('trying', c);
         const contact = await Contact.get(c);
         let contactUrl;
         try {
           contactUrl = await getUserAppFileUrl(
-            "me.json",
+            'me.json',
             contact.attrs.blockstackID,
             KINGDOM_DOMAIN
           );
@@ -123,7 +111,7 @@ class Kingdom extends Component {
         }
         if (contactUrl != null) {
           try {
-            console.log("adding", c);
+            console.log('adding', c);
             contacts.push(contact);
           } catch (e) {
             console.log(e);
@@ -133,7 +121,7 @@ class Kingdom extends Component {
         }
       });
     } catch (e) {
-      console.log("no permissions to use Contact collection", e);
+      console.log('no permissions to use Contact collection', e);
     }
     this.setState({ contacts });
   }
@@ -141,32 +129,32 @@ class Kingdom extends Component {
   notifySubject(subject, content) {
     this.userSessionChat
       .createNewRoom(
-        "Monster Kingdom " + this.props.ruler + " & " + subject.username,
-        "Welcome from " + this.props.ruler
+        'Monster Kingdom ' + this.props.ruler + ' & ' + subject.username,
+        'Welcome from ' + this.props.ruler
       )
       .then(roomResult => {
         this.userSessionChat
           .sendMessage(subject.username, roomResult.room_id, content)
           .then(result => {
-            console.log("result ", result);
+            console.log('result ', result);
           })
           .catch(error => {
-            console.log("error", error);
-            if (error.errcode === "M_CONSENT_NOT_GIVEN") {
+            console.log('error', error);
+            if (error.errcode === 'M_CONSENT_NOT_GIVEN') {
               var linkUrl = error.message.substring(
-                error.message.indexOf("https://openintents.modular.im"),
+                error.message.indexOf('https://openintents.modular.im'),
                 error.message.length - 1
               );
               console.log(linkUrl);
               var msg =
                 subject.username +
-                " was not notified. Please review the T&C of your chat provider openintents.modular.im (OI Chat)";
+                ' was not notified. Please review the T&C of your chat provider openintents.modular.im (OI Chat)';
               this.setState({ msg, err: error.message, linkUrl });
             }
           });
       })
       .catch(error => {
-        console.log("error from create room", error);
+        console.log('error from create room', error);
       });
   }
 
@@ -175,14 +163,14 @@ class Kingdom extends Component {
     const subject = subjectFromKingdomUrl(this.state.value);
 
     const content = {
-      msgtype: "m.text",
-      body: "I just added you to my kingdom. Come and join me there!",
-      format: "org.matrix.custom.html",
-      formatted_body: `I just added you to my kingdom! Come and join me <a href="${KINGDOM_DOMAIN}"> there</a>!`
+      msgtype: 'm.text',
+      body: 'I just added you to my kingdom. Come and join me there!',
+      format: 'org.matrix.custom.html',
+      formatted_body: `I just added you to my kingdom! Come and join me <a href="${KINGDOM_DOMAIN}"> there</a>!`,
     };
     this.notifySubject(subject, content);
     const subjects = jsonCopy(this.state.subjects);
-    this.setState({ value: "", clickAdd: false });
+    this.setState({ value: '', clickAdd: false });
     subjects.push(subject);
     this.setState({ subjects });
     this.saveSubjects(subjects);
@@ -190,11 +178,9 @@ class Kingdom extends Component {
 
   addContact(e) {
     e.preventDefault();
-    const subject = subjectFromKingdomUrl(
-      `${KINGDOM_DOMAIN}/kingdom/${this.state.contact}`
-    );
+    const subject = subjectFromKingdomUrl(`${KINGDOM_DOMAIN}/kingdom/${this.state.contact}`);
     const subjects = jsonCopy(this.state.subjects);
-    this.setState({ contact: "", clickContactAdd: false });
+    this.setState({ contact: '', clickContactAdd: false });
     subjects.push(subject);
     this.setState({ subjects });
     this.saveSubjects(subjects);
@@ -204,32 +190,26 @@ class Kingdom extends Component {
     e.preventDefault();
     const subjects = jsonCopy(this.state.subjects);
     const subject = subjects.splice(index, 1)[0]; // remove subject at index
-    console.log("removed subject", subject);
+    console.log('removed subject', subject);
     this.setState({ subjects });
     this.saveSubjects(subjects);
     const content = {
-      msgtype: "m.text",
-      body: "I just banished " + subject.username + ", sorry!",
-      format: "org.matrix.custom.html",
-      formatted_body: "I just banished <subjectlink/>, sorry!"
+      msgtype: 'm.text',
+      body: 'I just banished ' + subject.username + ', sorry!',
+      format: 'org.matrix.custom.html',
+      formatted_body: 'I just banished <subjectlink/>, sorry!',
     };
     this.notifySubject(subject, content);
   }
 
   saveSubjects(subjects) {
     const options = { encrypt: false };
-    this.userSession
-      .putFile(SUBJECTS_FILENAME, JSON.stringify(subjects), options)
-      .finally(() => {
-        if (window.location.search) {
-          window.history.pushState(
-            null,
-            "",
-            window.location.href.split("?")[0]
-          );
-        }
-        resolveSubjects(this, this.userSession, subjects);
-      });
+    this.userSession.putFile(SUBJECTS_FILENAME, JSON.stringify(subjects), options).finally(() => {
+      if (window.location.search) {
+        window.history.pushState(null, '', window.location.href.split('?')[0]);
+      }
+      resolveSubjects(this, this.userSession, subjects);
+    });
   }
 
   render() {
@@ -254,7 +234,7 @@ class Kingdom extends Component {
           <div
             className="col-lg-12 territory"
             style={{
-              backgroundImage: `url('${app}/territories/${rulerTerritory.id}.jpg')`
+              backgroundImage: `url('${app}/territories/${rulerTerritory.id}.jpg')`,
             }}
           >
             {rulerAnimal && rulerAnimal.name ? (
@@ -293,14 +273,11 @@ class Kingdom extends Component {
               <p>
                 <a href={`${EXPLORER_URL}/name/${username}`} target="_blank">
                   {username}
-                </a>{" "}
-                is a {rulerAnimal.name} that rules over the{" "}
-                {rulerTerritory.name}.
+                </a>{' '}
+                is a {rulerAnimal.name} that rules over the {rulerTerritory.name}.
               </p>
             ) : (
-              <p>
-                {username} is an unknown animal that hails from an unknown land.
-              </p>
+              <p>{username} is an unknown animal that hails from an unknown land.</p>
             )}
             <p>
               {mine ? (
@@ -323,7 +300,7 @@ class Kingdom extends Component {
                   <div
                     id="addSubject"
                     className="add-frame col-lg-8"
-                    style={{ borderColor: clickAdd ? "red" : "#f8f9fa" }}
+                    style={{ borderColor: clickAdd ? 'red' : '#f8f9fa' }}
                   >
                     <form onSubmit={this.addSubject} className="input-group">
                       <input
@@ -335,11 +312,7 @@ class Kingdom extends Component {
                         placeholder="https://example.com/kingdom/ruler.id"
                       />
                       <div className="input-group-append">
-                        <input
-                          type="submit"
-                          className="btn btn-primary"
-                          value="Add subject"
-                        />
+                        <input type="submit" className="btn btn-primary" value="Add subject" />
                       </div>
                     </form>
                   </div>
@@ -349,7 +322,7 @@ class Kingdom extends Component {
                       id="addContact"
                       className="add-frame col-lg-8"
                       style={{
-                        borderColor: clickContactAdd ? "red" : "#f8f9fa"
+                        borderColor: clickContactAdd ? 'red' : '#f8f9fa',
                       }}
                     >
                       <form onSubmit={this.addContact} className="input-group">
@@ -364,21 +337,14 @@ class Kingdom extends Component {
                           <option value=""></option>
                           {contacts.map((contact, index) => {
                             return (
-                              <option
-                                value={contact.attrs.blockstackID}
-                                key={contact.identifier}
-                              >
+                              <option value={contact.attrs.blockstackID} key={contact.identifier}>
                                 {contact.attrs.firstName}
                               </option>
                             );
                           })}
                         </select>
                         <div className="input-group-append">
-                          <input
-                            type="submit"
-                            className="btn btn-primary"
-                            value="Add Contact"
-                          />
+                          <input type="submit" className="btn btn-primary" value="Add Contact" />
                         </div>
                       </form>
                     </div>
