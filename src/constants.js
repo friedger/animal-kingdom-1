@@ -2,6 +2,10 @@ import { AppConfig } from 'blockstack';
 import { Contact } from 'blockstack-collections';
 
 export const appConfig = new AppConfig(['store_write', 'publish_data', Contact.scope]);
+export const authOptions = {
+  redirectTo: '/',
+};
+
 export const ANIMALS = [
   {
     id: 'monster-0',
